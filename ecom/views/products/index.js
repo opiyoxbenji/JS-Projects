@@ -1,6 +1,7 @@
 const layout = require('../layout');
 
 module.exports = ({ products }) => {
+	// Map over the products array and create an HTML string for each product card
 	const renderedProducts = products
 		.map(product => {
 			return `
@@ -27,6 +28,7 @@ module.exports = ({ products }) => {
 		})
 		.join('\n');
 
+	// Return a layout object with the joined product cards and additional HTML content
 	return layout({
 		content: `
       <section class="banner">
