@@ -1,9 +1,9 @@
 const layout = require('../layout');
 
 module.exports = ({ products }) => {
-  const renderedProducts = products
-    .map(product => {
-      return `
+	const renderedProducts = products
+		.map(product => {
+			return `
         <div class="column is-one-quarter">
           <div class="card product-card">
             <figure>
@@ -24,11 +24,11 @@ module.exports = ({ products }) => {
           </div>
         </div>
       `;
-    })
-    .join('\n');
+		})
+		.join('\n');
 
-  return layout({
-    content: `
+	return layout({
+		content: `
       <section class="banner">
         <div class="container">
           <div class="columns is-centered">
@@ -53,6 +53,6 @@ module.exports = ({ products }) => {
           </div>
         </div>
       </section>
-    `
-  });
+    `,
+	});
 };
