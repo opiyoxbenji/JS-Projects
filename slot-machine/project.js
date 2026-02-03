@@ -1,8 +1,5 @@
 // Slot Machine Game
 
-// Give the user their winnings
-// Play again or quit
-
 const prompt = require('prompt-sync')();
 
 const ROWS = 3;
@@ -99,45 +96,62 @@ const transpose = reels => {
 	return rows;
 };
 
-const printRows = (rows) => {
-   for (const row of rows) {
-       let rowString = '';
-       for (const [i, symbol] of row.entries()) {
-           rowString += symbol;
-           if (i != row.length - 1) {
-               rowString += ' | ';
-           }
-       }
-       console.log(rowString);
-   }
-}
+const printRows = rows => {
+	for (const row of rows) {
+		let rowString = '';
+		for (const [i, symbol] of row.entries()) {
+			rowString += symbol;
+			if (i != row.length - 1) {
+				rowString += ' | ';
+			}
+		}
+		console.log(rowString);
+	}
+};
 
 const getWinnings = (rows, bet, lines) => {
-   let winnings = 0;
-   for (let row = 0; row < lines; row++) {
-       const symbols = rows[row];
-       let allSame = true;
-       for (const symbol of symbols) {
-           if (symbol != symbols[0]) {
-               allSame = false;
-               break;
-           }
-       }
-       if (allSame) {
-           winnings += bet * SYMBOLS_VALUES[symbols[0]];
-       }
-   }
-   return winnings;
-}
+	let winnings = 0;
+	for (let row = 0; row < lines; row++) {
+		const symbols = rows[row];
+		let allSame = true;
+		for (const symbol of symbols) {
+			if (symbol != symbols[0]) {
+				allSame = false;
+				break;
+			}
+		}
+		if (allSame) {
+			winnings += bet * SYMBOLS_VALUES[symbols[0]];
+		}
+	}
+	return winnings;
+};
 
-let balance = deposit();
-const numberOfLines = getNumberOfLines();
-const bet = getBet(balance);
-const reels = spin();
-const rows = transpose(reels);
-console.log(reels);
-console.log(rows);
-printRows(rows);
-const winnings = getWinnings(rows, bet, numberOfLines);
-balance += winnings;
-console.log(`You won $${winnings.toFixed(2)}. Your balance is $${balance.toFixed(2)}.`);
+// Give the user their winnings
+const game = () => {
+	let balance = deposit();
+	while (true) {
+		console.log(`Current balance: $${balance.toFixed(2)}`);
+		const numberOfLines = getNumberOfLines();
+		const bet = getBet(balance, numberOfLines);
+		balance -= bet * numberOfLines;
+		const reels = spin();
+		const rows = transpose(reels);
+		printRows(rows);
+		const winnings = getWinnings(rows, bet, numberOfLines);
+		balance += winnings;
+		console.log(`You won $${winnings.toFixed(2)}`);
+		if (balance <= 0) {
+			console.log('You have run out of money!');
+			break;
+		}
+
+		// Play again or quit
+		const playAgain = prompt('Do you want to play again? (y/n): ');
+		if (playAgain.toLowerCase() != 'y') {
+			break;
+		}
+	}
+};
+
+game();
